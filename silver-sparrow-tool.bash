@@ -12,9 +12,10 @@ function testFiles {
 		echo "- ALERT: File matching known records ($2) has been found."
 		echo "  Location: $1"
 		echo '  Results will be written to log file.'
-		echo '- ALERT: File indicative of a Silver Sparrow infection was located.' >> $PWD\detection.txt
-		echo "       Location:   $1" >> $PWD\detection.txt
-		echo "       SS Version: $2" >> $PWD\detection.txt
+		# shellcheck disable=SC2129
+		echo '- ALERT: File indicative of a Silver Sparrow infection was located.' >> "$PWD"\\detection.txt
+		echo "       Location:   $1" >> "$PWD"\\detection.txt
+		echo "       SS Version: $2" >> "$PWD"\\detection.txt
 	fi
 }
 
@@ -22,10 +23,10 @@ echo '- Silver Sparrow Detection/Prevention'
 echo '====================================================='
 
 #remove existing copies of detection.txt
-rm -f $PWD\detection.txt
+rm -f "$PWD"\\detection.txt
 
 #declare processor type
-if [ $(uname -m) = 'x86_64' ] 
+if [ "$(uname -m)" = 'x86_64' ] 
 then
 	echo "- Processor type: Intel"
 else
@@ -35,7 +36,7 @@ fi
 #capture/declare name of logged-in user
 while [ -z ${varUser+x} ]
 do
-	varUser=$(ps aux | grep Finder | grep -v grep | grep -v '^_' | awk '{print $1}' | head -1)
+	varUser="$(pgrep Finder | grep -v grep | grep -v '^_' | awk '{print $1}' | head -1)"
 	sleep 5
 done
 echo "- Logged-in user: $varUser"
@@ -80,7 +81,7 @@ then
 fi
 
 #place the inoculation file
->/Users/$varUser/Library/._insu
+true > /Users/"$varUser"/Library/._insu
 echo "- Placed Silver Sparrow self-destruct file at /Users/$varUser/Library/._insu"
 
 #conclude
